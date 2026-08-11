@@ -1,0 +1,48 @@
+name: Publish compute-contract
+
+# Publishes @we-kernel/compute-contract to npm (public, Apache-2.0).
+# Fires on tag `contract-v*` or manual dispatch.
+#
+# Prerequisites (user-side, one-time):
+#   1. Register the `we-kernel` org on https://www.npmjs.com/org/create
+#   2. Create an npm access token (Automation) and add it as repo secret
+#      `NPM_TOKEN` in we-kernel/kernel → Settings → Secrets.
+# See ADR-0002 (we-kernel/program) for the publish + consumption pattern.
+
+on:
+  push:
+    tags: ["contract-v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (must match package.json, e.g. 0.1.0)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test
+
+      - name: Publish @we-kernel/compute-contract
+        run: pnpm --filter @we-kernel/compute-contract publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

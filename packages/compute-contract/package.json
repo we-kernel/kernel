@@ -4,6 +4,14 @@
   "description": "Stable API contract between the we-kernel L0-os execution kernel and upper layers (L0-sdlc / L1 / L2).",
   "type": "module",
   "license": "Apache-2.0",
+  "keywords": ["agent", "kernel", "compute", "contract", "execution", "we-kernel"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/we-kernel/kernel",
+    "directory": "packages/compute-contract"
+  },
+  "author": "we-kernel contributors",
+  "files": ["dist", "README.md", "LICENSE"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -28,5 +36,9 @@
   "devDependencies": {
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

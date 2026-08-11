@@ -1,0 +1,32 @@
+{
+  "name": "@we-kernel/compute-contract",
+  "version": "0.1.0",
+  "description": "Stable API contract between the we-kernel L0-os execution kernel and upper layers (L0-sdlc / L1 / L2).",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./openapi": {
+      "types": "./dist/openapi.d.ts",
+      "import": "./dist/openapi.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

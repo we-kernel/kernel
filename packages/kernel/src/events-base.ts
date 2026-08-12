@@ -397,58 +397,6 @@ export function createWorkerTenantMismatchEvent(
   return createEvent("worker.tenant_mismatch", source, payload, correlationId, tenantId);
 }
 
-/**
- * Returns `true` if `type` is a known event type at the given schema version.
- *
- * Versioning rules:
- * - `schemaVersion === 1`: pre-multi-tenant era. All win-enigma event types
- *   that existed at v1 are recognized. Because the kernel surface does not
- *   carry the SDLC type list, this function only inspects the GENERIC
- *   kernel-registered types (auth.* / worker.* / repo.accessed). SDLC types
- *   (issue.*, run.*, task.*, etc.) are known to win-enigma at v1 and remain
- *   valid; that membership check lives in the SDLC layer.
- * - `schemaVersion === EVENT_SCHEMA_VERSION` (current, 2): recognized iff
- *   `type` is in {@link WinEnigmaEventType}.
- * - Future versions: extend the switch when bumping
- *   {@link EVENT_SCHEMA_VERSION}.
- *
- * @param type - Event type string to test.
- * @param schemaVersion - Schema version to test against (defaults to current).
- */
-export function isEventTypeKnownAtVersion(
-  type: string,
-  schemaVersion: number = EVENT_SCHEMA_VERSION,
-): boolean {
-  // Build the registered set lazily from the union; a small constant set
-  // would also work but this stays in sync if the union grows.
-  const currentTypes: ReadonlySet<string> = new Set<WinEnigmaEventType>([
-    "repo.accessed",
-    "auth.login_succeeded",
-    "auth.login_failed",
-    "auth.force_logout",
-    "auth.password_reset",
-    "worker.tenant_mismatch",
-  ]);
-
-  switch (schemaVersion) {
-    case 1:
-      // v1 pre-multi-tenant: auth/repo events did not exist yet, so a v1
-      // consumer would not recognize them. Only the GENERIC identity of
-      // these types existed post-v1. Return true iff the type is known at
-      // the current surface (lenient — v1 consumers that genuinely need
-      // to reject newer types should branch on schemaVersion themselves).
-      // For strict correctness we mirror the current surface.
-      return currentTypes.has(type);
-    case EVENT_SCHEMA_VERSION:
-      return currentTypes.has(type);
-    default:
-      // Unknown future version: conservative — recognize iff it is in the
-      // current registered set. Bumps to EVENT_SCHEMA_VERSION should add a
-      // case above if semantics change.
-      return currentTypes.has(type);
-  }
-}
-
 // --- EventBus Interface ---
 
 export type EventHandler<T extends WinEnigmaEvent = WinEnigmaEvent> = (event: T) => Promise<void>;

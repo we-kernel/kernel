@@ -6,11 +6,17 @@
 // NO dependency on any SDLC concept (Blueprint / Requirement / TestExecution /
 // Installation / Project / git repo / Deployment / Release / etc.).
 //
-// Wave 1a scope (this package, v0.1.0):
+// Wave 1a + Wave 1b scope (this package, v0.2.0):
 //   - version                 — KERNEL_VERSION
-//   - entities-base           — transition type slice (AgentRole / ArtifactState
-//                               / VALID_ARTIFACT_TRANSITIONS / InstallationProvider);
-//                               full entities-base lands in Wave 1b (#8)
+//   - entities-base           — full GENERIC entity primitives (AgentRole /
+//                               ArtifactState / VALID_ARTIFACT_TRANSITIONS /
+//                               InstallationProvider / TaskState / RunState /
+//                               WorkerStatus / ConstraintTier / TaskType /
+//                               BlockType / EventSource / FILE_PRODUCING_ROLES /
+//                               TASK_CAPABILITY_MAP / VALID_TASK_TRANSITIONS /
+//                               VALID_RUN_TRANSITIONS / BlockPort / BlockRetryConfig /
+//                               BlueprintBlock / WorkerInfo / Constraint / TaskMetrics);
+//                               migrated in Wave 1b (#8)
 //   - errors-base             — WinEnigmaError + 5 domain-agnostic subclasses
 //   - events-base             — WinEnigmaEvent envelope + createEvent factory +
 //                               schema-version constants + 6 GENERIC event types

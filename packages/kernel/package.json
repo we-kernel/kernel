@@ -1,0 +1,52 @@
+{
+  "name": "@we-kernel/kernel",
+  "version": "0.1.0",
+  "description": "Domain-agnostic execution-kernel primitives (L0-os). Wave 1a: errors-base + events-base + 8 GENERIC leaves, plus the entities-base transition slice. Extracted from win-enigma/packages/core per ADR-0004 / we-kernel/program #7.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "keywords": [
+    "agent",
+    "kernel",
+    "execution",
+    "primitives",
+    "we-kernel",
+    "l0-os"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/we-kernel/kernel",
+    "directory": "packages/kernel"
+  },
+  "author": "we-kernel contributors",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

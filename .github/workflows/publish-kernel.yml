@@ -1,0 +1,52 @@
+name: Publish kernel
+
+# Publishes @we-kernel/kernel to npm (public, Apache-2.0).
+# Fires on tag `kernel-v*` or manual dispatch.
+#
+# Follows the same we-kernel npm org + publish pattern as @we-kernel/compute-contract
+# (see .github/workflows/publish-contract.yml and ADR-0002 for the publish +
+# consumption model). The kernel package is the Wave 1a seed of the L0-os
+# extraction strategy (ADR-0004 / we-kernel/program #7).
+#
+# Prerequisites (user-side, one-time, shared with compute-contract):
+#   1. Register the `we-kernel` org on https://www.npmjs.com/org/create
+#   2. Create an npm access token (Automation) and add it as repo secret
+#      `NPM_TOKEN` in we-kernel/kernel → Settings → Secrets.
+# See ADR-0002 (we-kernel/program) for the publish + consumption pattern and
+# ADR-0004 for the L0-os extraction strategy.
+
+on:
+  push:
+    tags: ["kernel-v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (must match package.json, e.g. 0.1.0)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test
+
+      - name: Publish @we-kernel/kernel
+        run: pnpm --filter @we-kernel/kernel publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -192,7 +192,14 @@ export interface TaskMetrics {
 // --- Generic transition data maps ---
 
 export const VALID_TASK_TRANSITIONS: Record<TaskState, TaskState[]> = {
-  blocked: ["ready", "failed", "cancelled"],
+  // win-enigma #835 (HITL pre-execution gate): blocked → succeeded is legal.
+  // A gated planning task is held `blocked` (awaiting_approval) after its
+  // actual work — producing the plan — is done; gate approval promotes it
+  // directly to `succeeded` (re-queueing as `ready` would make a worker
+  // re-plan). Synced with win-enigma's core ontology in the same release
+  // window; keep the two maps aligned (cross-repo contract, flagged in
+  // win-enigma PR #836 review D1).
+  blocked: ["ready", "succeeded", "failed", "cancelled"],
   ready: ["executing", "failed", "cancelled"],
   // #393: executing → cancelled is legal. Previously omitted, which made
   // cancelRun's per-task loop (processor/index.ts) throw on executing tasks,

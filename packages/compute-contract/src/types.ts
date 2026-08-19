@@ -39,7 +39,11 @@ export type TaskState =
 
 /** Valid Task state transitions (mirrors win-enigma core ontology). */
 export const VALID_TASK_TRANSITIONS: Record<TaskState, readonly TaskState[]> = {
-  blocked: ["ready", "failed", "cancelled"],
+  // win-enigma #835 (HITL pre-execution gate): blocked → succeeded is legal
+  // (a gated planning task completes its work while held blocked; approval
+  // promotes it directly to succeeded). Keep synced with entities-base.ts
+  // and win-enigma core.
+  blocked: ["ready", "succeeded", "failed", "cancelled"],
   ready: ["executing", "failed", "cancelled"],
   executing: ["succeeded", "failed", "ready", "blocked", "cancelled"],
   succeeded: [],

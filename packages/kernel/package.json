@@ -1,6 +1,6 @@
 {
   "name": "@we-kernel/kernel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Domain-agnostic execution-kernel primitives (L0-os). Wave 1a: errors-base + events-base + 8 GENERIC leaves, plus the entities-base transition slice. Extracted from win-enigma/packages/core per ADR-0004 / we-kernel/program #7.",
   "type": "module",
   "license": "Apache-2.0",

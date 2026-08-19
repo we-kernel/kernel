@@ -17,40 +17,18 @@
 //   - `PLATFORM_TENANT_ID` is owned by ./constants.js (GENERIC leaf in this
 //     same package, the Wave 1a constants extraction). It is imported (single
 //     SSOT, FIP-0020 §2.1 nil UUID) rather than re-declared here.
-//   - `EventSource` is defined in win-enigma entities.ts as a pure string-literal
-//     union with no SDLC concept dependency. It is NOT in the current
-//     entities-base.ts transition slice (Phase 1 scaffolding only carried
-//     AgentRole / ArtifactState / VALID_ARTIFACT_TRANSITIONS /
-//     InstallationProvider). Rather than hard-degrade the envelope (the single
-//     most fundamental kernel symbol), we declare a local literal-identical
-//     `EventSource` alias and mark it as a Wave 1b #8 transition: once the full
-//     entities-base migration lands, this alias should be replaced by an import
-//     from "./entities-base.js".
+//   - `EventSource` is a pure string-literal union with no SDLC concept
+//     dependency. It is now owned by ./entities-base.js (migrated in Wave 1b
+//     #8) and imported here as a type-only dependency — single SSOT for this
+//     fundamental kernel symbol.
 //
 // No reverse dependency: this file MUST NOT import anything from win-enigma.
 
 // PLATFORM_TENANT_ID is owned by ./constants.js (GENERIC leaf, same package).
 // Imported here rather than re-declared to keep a single SSOT (FIP-0020 §2.1).
 import { PLATFORM_TENANT_ID } from "./constants.js";
+import type { EventSource } from "./entities-base.js";
 
-// TODO(Wave 1b #8): replace local `EventSource` with
-//   `import type { EventSource } from "./entities-base.js";`
-//   once the full entities-base migration carries it. The local copy is
-//   literal-identical to win-enigma's definition.
-/**
- * Origin of an event. Pure string-literal union; no SDLC concept dependency.
- *
- * Source: win-enigma/packages/core/src/ontology/entities.ts (Wave 1a transition copy).
- */
-export type EventSource =
-  | "github"
-  | "gitlab"
-  | "gitee"
-  | "bitbucket"
-  | "jira"
-  | "manual"
-  | "agent"
-  | "scheduler";
 
 /**
  * Current event-schema version.
